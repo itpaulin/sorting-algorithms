@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <omp.h>
-#include <valgrind/callgrind.h>
 
 // Variáveis globais
 const int SIZE = 250000;    // Tamanho dos arrays
@@ -142,27 +141,20 @@ int main()
 
     // Medir tempo de execução para versão paralela com 2 threads
     double startParallel2 = omp_get_wtime();
-    CALLGRIND_TOGGLE_COLLECT; // Inicia a coleta de dados do cache
     parallelBucketSort(arrayParallel2, 2);
-    CALLGRIND_TOGGLE_COLLECT; // Interrompe a coleta de dados do cache
-    CALLGRIND_DUMP_STATS;     // Exibe as estatísticas do cache
     double endParallel2 = omp_get_wtime();
     double parallelTime2 = endParallel2 - startParallel2;
 
     // Medir tempo de execução para versão paralela com 4 threads
     double startParallel4 = omp_get_wtime();
-    CALLGRIND_TOGGLE_COLLECT; // Inicia a coleta de dados do cache
     parallelBucketSort(arrayParallel4, 4);
-    CALLGRIND_TOGGLE_COLLECT; // Interrompe a coleta de dados do cache
-    CALLGRIND_DUMP_STATS;     // Exibe as estatísticas do cache
     double endParallel4 = omp_get_wtime();
     double parallelTime4 = endParallel4 - startParallel4;
 
-    // Calcular Speedup e Eficiência para 2 threads
+    // Calcular Speedup e Eficiência
     double speedup2 = serialTime / parallelTime2;
     double efficiency2 = speedup2 / 2;
 
-    // Calcular Speedup e Eficiência para 4 threads
     double speedup4 = serialTime / parallelTime4;
     double efficiency4 = speedup4 / 4;
 
@@ -170,11 +162,11 @@ int main()
     printf("Tempo (Paralelo 2 threads): %.6f segundos\n", parallelTime2);
     printf("Tempo (Paralelo 4 threads): %.6f segundos\n", parallelTime4);
 
-    // printf("Speedup (2 threads): %.2f\n", speedup2);
-    // printf("Eficiência (2 threads): %.2f\n", efficiency2);
+    printf("Speedup (2 threads): %.2f\n", speedup2);
+    printf("Eficiência (2 threads): %.2f\n", efficiency2);
 
-    // printf("Speedup (4 threads): %.2f\n", speedup4);
-    // printf("Eficiência (4 threads): %.2f\n", efficiency4);
+    printf("Speedup (4 threads): %.2f\n", speedup4);
+    printf("Eficiência (4 threads): %.2f\n", efficiency4);
 
     free(arraySerial);
     free(arrayParallel2);
